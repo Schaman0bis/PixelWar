@@ -35,13 +35,13 @@ body {
 }
 
 .containerTopPower{
-    display: flex;
+    content :  "5";
     position : relative;
-    height:10dvh;
-    width : 10dvw;
-    margin: 5% auto; /* CENTRE le container horizontalement */
+    top:-50%;
+    left : 60%;
+    padding : 5%;
     border-radius: 90px;
-    background-color: #75073aa2;
+    background-color: #ff1010a2;
     border: 0.5dvh solid #000000;
     z-index: 2;
 }
@@ -64,11 +64,14 @@ h1 {
     overflow: hidden; /* Empêche la grille de dépasser */
 }
 
+.pixelGridWrapper{
+    will-change: transform;/*optimisation*/
+}
+
 .pixel-grid {
     display: grid;
     grid-template-columns: repeat(100, 1.5vh);
     grid-template-rows: repeat(100, 1.5vh);
-    transition: transform 0s ease; /* Animation de zoom fluide */
 }
 
 .pixel {
@@ -80,7 +83,7 @@ h1 {
 }
 
 .bubble { /*Permet de faire la bulle quand hover*/
-    display : none;
+    opacity: 0;
     position: absolute;
     transform: translate(0%,-130%);
     background-color: #8f2121;

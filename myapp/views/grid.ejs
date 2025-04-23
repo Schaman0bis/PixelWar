@@ -10,17 +10,26 @@
 <body>
 
     <div class = "containerTop">
-        <div class="containerTopTittle">
+        <div class="containerTopTittle" id = "containerTopTittle">
             <h1>Pixel War</h1>
             <div id="pseudo" data-message="<%= pseudo %>"><%= pseudo %></div>
-            <button id="changeControl">Drawing</button>     
+            <button id="changeControl">Drawing</button>  
+            <div class=containerTopPower id = "pixelLeft" data-power = 5>5</div>   
+            
         </div>
-        <div class=containerTopPower>Powe</div>
+        
+        
     </div>
 
     <div class="container" id = 'container'>
         <img id="imagePreview" src="" alt="" style ="position: absolute; opacity: 0.5; z-index : 1; pointer-events: none;"/>
-        <div class="pixel-grid" id="pixel-grid"></div>
+
+        <div class="pixelGridWrapper" id = "pixelGridWrapper">
+            <div class="pixel-grid" id="pixel-grid"></div>
+        </div>
+
+        
+
         <div class="bubble" id="bubble">bubble.content</div>
 
         <div class="containerBottom">

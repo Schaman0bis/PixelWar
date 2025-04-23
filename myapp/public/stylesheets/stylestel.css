@@ -44,12 +44,14 @@ h1 {
     top: 0dvw;
 }
 
+.pixelGridWrapper{
+    will-change: transform;/* optimisation du rendu */
+}
+
 .pixel-grid {
     display: grid;
-    will-change: transform; /* optimisation du rendu */
     grid-template-columns: repeat(100, 1.5dvw);
     grid-template-rows: repeat(100, 1.5dvw);
-    transition: transform 0s ease; /* Animation de zoom fluide */
 }
 
 .pixel {
@@ -61,7 +63,7 @@ h1 {
 }
 
 .bubble { /*Permet de faire la bulle quand hover*/
-    display : none;
+    opacity: 0;
     position: absolute;
     transform: translate(0%,-130%);
     background-color: #8f2121;

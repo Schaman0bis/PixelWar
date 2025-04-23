@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const mode = document.getElementById('changeControl');
     const pseudo = document.getElementById('pseudo');
     const bubble = document.getElementById('bubble');
+    const pixelLeft = document.getElementById('pixelLeft');
+    const pixelGridWrapper = document.getElementById('pixelGridWrapper');
 
     const gridSize = 100; // Taille de la grille (50x50 pixels)
     let zoomLevel = [3,3]; // Niveau de zoom initial (1 = taille normale)  
@@ -51,28 +53,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
             pixel.name = "None "; //Va devoir recupere ces vaeurs depuis la base de donnée
             pixel.date = new Date();
-            pixel.setAttribute('data-tooltip', pixel.name + `${pixel.date.getDate()}/${pixel.date.getMonth()+1} à ${pixel.date.getHours()}:${pixel.date.getMinutes()}`);/*C'est les el affiche lorsqu'on hover un pixel.*/
+            pixel.dataset.tooltip= pixel.name + `${pixel.date.getDate()}/${pixel.date.getMonth()+1} à ${pixel.date.getHours()}:${pixel.date.getMinutes()}`;/*C'est les el affiche lorsqu'on hover un pixel.*/
 
             pixel.addEventListener('mousedown',() => startTime = Date.now());
             pixel.addEventListener('touchstart',() => startTime = Date.now());
 
-            pixel.addEventListener('click', () => {
-                if (drawing && Date.now() - startTime < 200){  //Après mettre si a asssez de recharge
-                    pixel.style.backgroundColor = Color;
-                    pixel.name = pseudo.dataset.message;/*self.seudo*/
-                    pixel.date = new Date();
-                    pixel.setAttribute('data-tooltip', pixel.name + ` ${pixel.date.getDate()}/${pixel.date.getMonth()+1} à ${pixel.date.getHours()}:${pixel.date.getMinutes()}`);/*C'est les el affiche lorsqu'on hover un pixel.*/
-        
-                }                
+            pixel.addEventListener('click', () => {                
                 //si clic droit
-                bubble.style.display = 'flex';
-                bubble.textContent = pixel.getAttribute('data-tooltip');                
-                rect = pixel.getBoundingClientRect();
-                rectBubble = bubble.getBoundingClientRect();
-                bubble.style.left = `${rect.left + rect.width/2 - rectBubble.width*0.5}px`;
-                bubble.style.top = `${rect.top}px`;
+                if (drawing && Date.now() - startTime < 200 && pixelLeft.dataset.power>0){  //Après mettre si a asssez de recharge
+                    pixelLeft.dataset.power -=1;
+                    pixelLeft.textContent = pixelLeft.dataset.power;
+                    pixel.style.backgroundColor = Color;
+                    pixel.name = pseudo.dataset.message;/*self.pseudo*/
+                    pixel.date = new Date();
+                    pixel.dataset.tooltip= pixel.name + ` ${pixel.date.getDate()}/${pixel.date.getMonth()+1} à ${pixel.date.getHours()}:${pixel.date.getMinutes()}`;/*C'est les el affiche lorsqu'on hover un pixel.*/
+                }      
+                if(1){
+                    bubble.style.opacity = 1;
+                    bubble.textContent = pixel.dataset.tooltip;                
+                    rect = pixel.getBoundingClientRect();
+                    rectBubble = bubble.getBoundingClientRect();
+                    bubble.style.left = `${rect.left + rect.width/2 - rectBubble.width*0.5}px`;
+                    bubble.style.top = `${rect.top}px`;
+                } 
+                else if (drawing && Date.now() - startTime > 200){
+                    bubble.style.opacity = 0;
+                }           
             });
-
             pixelGrid.appendChild(pixel);
         }
     }
@@ -131,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
         else if(e.deltaY<0 && zoomLevel[0] < 6){
             zoomLevel[0] += 0.4;
         }
-        
         updateZoom();
     });
 
@@ -159,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateZoom() {
 
         if (drawing){
-            pixelGrid.style.transform = `scale(${zoomLevel[0]}) translateX(${TransX}px) translateY(${TransY}px)`;
+            pixelGridWrapper.style.transform = `scale(${zoomLevel[0]}) translateX(${TransX}px) translateY(${TransY}px)`;
         }
         else{
             imagePreview.style.transform = `scale(${zoomLevel[0]}) translateX(${TransX}px) translateY(${TransY}px)`;
@@ -169,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updatePos(X,Y){
         if (drawing){
-            pixelGrid.style.transform = `scale(${zoomLevel[0]}) translateX(${X}px) translateY(${Y}px)`; 
+            pixelGridWrapper.style.transform = `scale(${zoomLevel[0]}) translateX(${X}px) translateY(${Y}px)`; 
         }
         else{
             imagePreview.style.transform = `scale(${zoomLevel[0]}) translateX(${X}px) translateY(${Y}px)`; 
@@ -275,6 +281,39 @@ document.addEventListener('DOMContentLoaded', () => {
             imagePreview.style.top = (e.clientY - imgOffsetY) + 'px';
         }
     };
+
+    /*const canvas = document.getElementById('pixelCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    //const gridSize = 100;
+    const pixelSize = 10; // taille en pixels
+    canvas.width = gridSize * pixelSize;
+    canvas.height = gridSize * pixelSize;
+    
+    let pixels = Array(gridSize).fill().map(() => Array(gridSize).fill('#ff0000'));
+    
+    function drawGrid() {
+        for (let y = 0; y < gridSize; y++) {
+            for (let x = 0; x < gridSize; x++) {
+                ctx.fillStyle = pixels[y][x];
+                ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+            }
+        }
+    }
+    
+    // Dessiner la grille initiale
+    drawGrid();
+    
+    // Gestion du clic
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((e.clientX - rect.left) / pixelSize);
+        const y = Math.floor((e.clientY - rect.top) / pixelSize);
+        
+        pixels[y][x] = "#0000FF"; // Exemple : on colorie en rouge
+        drawGrid(); // redraw entire canvas (très rapide)
+    });*/
+    
 
 
     // Créer la grille au chargement de la page
